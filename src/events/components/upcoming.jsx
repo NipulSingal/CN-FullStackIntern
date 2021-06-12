@@ -183,12 +183,12 @@ export default function upcoming(props) {
               <img className={classes.headerImg} src={event.cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
             </div>
           </div>
-          <div className={classes.eventStatus}>
+          {event.event_sub_category != 'Archived' ? <div className={classes.eventStatus}>
             <div className={classes.eventStatusContainer}>
               <div className={classes.circle}></div>
               <p> Registrations <b>open</b> till <b> {event.registration_end_time} </b></p>
             </div>
-          </div>
+          </div> : <></>}
         </header>
         <main className={classes.main}>
           <p className={classes.eventName}> {event.name} </p>
@@ -225,9 +225,9 @@ export default function upcoming(props) {
             </div>
             {event.registered_users.show_users_count && <p className={classes.count}> and <b> {event.registered_users.other_users_count} </b> others registered </p>}
           </div>
-          <div className={classes.status}>
+          {event.event_sub_category != 'Archived' ? <div className={classes.status}>
             <img src="https://files.codingninjas.in/0000000000001272.png" height="30px" alt="" />
-          </div>
+          </div> : <></>}
         </footer>
       </div>
     </div>

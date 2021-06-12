@@ -131,55 +131,42 @@ export default function App () {
   const classes = useStyles()
   const [eventCategory, setEventCategory] = React.useState('ALL_EVENTS')
   const [subEventCategory, setSubEventCategory] = React.useState('Upcoming')
-  const [tags, setTags] = React.useState([])
-  const [events, setEvents] = React.useState([])
+  // const [tags, setTags] = React.useState([])
+  // const [events, setEvents] = React.useState([])
 
   const handleChange = (s) => {
     setEventCategory(s)
     setSubEventCategory('Upcoming')
-    fetchEvents()
-    fetchTags()
+    // fetchEvents()
+    // fetchTags()
   }
   const handleSubChange = (s) => {
     setSubEventCategory(s)
-    fetchEvents()
-    fetchTags()
+    // fetchEvents()
+    // fetchTags()
   }
+  // console.log(events)
+  // console.log(tags)
 
-  const fetchTags = () => {
-    return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
-      .then((response) => response.json())
-      .then((e) => {
-        setTags(e.data && e.data.tags ? e.data.tags : [])
-      });
-  }
-  const fetchEvents = () => {
-    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
-      .then((response) => response.json())
-      .then((e) => {
-        setEvents(e.data && e.data.events ? e.data.events : [])
-      });
-  }
-
-  // const downloadData = () => {
-  //   callApi(`https://api.codingninjas.com/api/v3/event_tags`)
-  //     .then(e => {
-  //       if(e.success){
-  //         console.log(e.data.tags);
-  //         setTags(e.data && e.data.tags ? e.data.tags : [])
-  //       }
-  //     })
-  //   callApi(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
-  //     .then(e => {
-  //       if(e.success){
-  //         setEvents(e.data.events)
-  //       }
-  //     })
+  // const fetchTags = () => {
+  //   return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
+  //     .then((response) => response.json())
+  //     .then((e) => {
+  //       setTags(e.data && e.data.tags ? e.data.tags : [])
+  //     });
   // }
-  React.useEffect(() => {
-    fetchTags()
-    fetchEvents()
-  }, [])
+  // const fetchEvents = () => {
+  //   return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
+  //     .then((response) => response.json())
+  //     .then((e) => {
+  //       setEvents(e.data && e.data.events ? e.data.events : [])
+  //     });
+  // }
+
+  // React.useEffect(() => {
+  //   fetchTags()
+  //   fetchEvents()
+  // }, [])
   const eventBar = [
     {
       name: 'All Events',
@@ -270,7 +257,7 @@ export default function App () {
               )
             })}
           </div>
-          <EventBody events={events} tags={tags} eventCategory={eventCategory} subEventCategory={subEventCategory} />
+          <EventBody eventCategory={eventCategory} subEventCategory={subEventCategory} />
         </div>
       </div>
 
