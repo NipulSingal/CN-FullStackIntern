@@ -179,7 +179,7 @@ export default function upcoming() {
           <div className={classes.glass}>
             <div className={classes.coverImageContainer} >
               <div className={classes.glassMain}></div>
-              <img className={classes.headerImg} src="https://files.codingninjas.in/scolarship-mobile-version-event-10896.jpg" alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
+              <img className={classes.headerImg} src="https://files.codingninjas.in/intro-to-ds-and-algo-karunya-institute-desktop-version-10931.jpg" alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
             </div>
           </div>
           <div className={classes.eventStatus}>
