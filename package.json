@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
     "@testing-library/user-event": "^12.8.3",
+    "clsx": "^1.1.1",
     "eslint-auto-fix": "^1.0.3",
     "eslint-plugin-no-inline-styles": "^1.0.5",
     "eslint-plugin-react-extra": "^0.1.0",
