@@ -169,8 +169,9 @@ const useStyles = makeStyles(() => ({
   }
 }))
 
-export default function upcoming() {
+export default function upcoming(props) {
   const classes = useStyles()
+  const event = props.event
 
   return (
     <div className={classes.event}>
@@ -179,49 +180,50 @@ export default function upcoming() {
           <div className={classes.glass}>
             <div className={classes.coverImageContainer} >
               <div className={classes.glassMain}></div>
-              <img className={classes.headerImg} src="https://files.codingninjas.in/intro-to-ds-and-algo-karunya-institute-desktop-version-10931.jpg" alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
+              <img className={classes.headerImg} src={event.cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
             </div>
           </div>
           <div className={classes.eventStatus}>
             <div className={classes.eventStatusContainer}>
               <div className={classes.circle}></div>
-              <p> Registrations <b>open</b> till <b>19 Jun, 09:30 PM</b></p>
+              <p> Registrations <b>open</b> till <b> {event.registration_end_time} </b></p>
             </div>
           </div>
         </header>
         <main className={classes.main}>
-          <p className={classes.eventName}>Coding Ninjas Admission &amp; Scholarship Test June 21</p>
+          <p className={classes.eventName}> {event.name} </p>
           <div className={classes.details}>
             <div className={classes.eventInfoItem}>
               <p className={classes.itemLabel}><b>Starts on</b></p>
-              <p className={classes.itemValue}> 09:00 PM, 19 Jun 2021 </p>
+              <p className={classes.itemValue}> {event.event_start_time} </p>
             </div>
             <div className={clsx(classes.eventInfoItem, classes.price)}>
               <p className={classes.itemLabel}><b>Entry Fee</b></p>
-              <p className={classes.itemValue}> INR 99 </p>
+              <p className={classes.itemValue}> {event.fees || 'Free'} </p>
             </div>
             <div className={classes.eventInfoItem}>
               <p className={classes.itemLabel}><b>Venue</b></p>
-              <p className={classes.itemValue}>Online, CodeZen</p>
+              <p className={classes.itemValue}> {event.venue} </p>
             </div>
           </div>
-          <div className={classes.shortDescription}> To encourage, reward and financially assist worthy students, as a part of this programme, we will conduct a National Level Online Admission and Scholarship Test for all Coding Ninjas courses. </div>
+          <div className={classes.shortDescription}> {event.short_desc} </div>
           <div className={classes.tagsContainer}>
-            <div className={classes.tag}> Scholarship Test </div>
+            {event.card_tags.map(c => (
+              <div key={c} className={classes.tag}> {c} </div>
+            ))}
           </div>
         </main>
         
         <footer className={classes.footer}>
           <div className={classes.registeredUsers}>
             <div className={classes.profileImgContainer}>
-              <div className={clsx(classes.matTooltipTrigger, classes.userImage)}>
-                <img className={classes.footerImage} src="https://lh3.googleusercontent.com/a-/AOh14GgojE4VtZXFrgPtQbjVjkCviL05Q7p4juQ-FZ28BA=s96-c" />
-              </div>
-              <div className={clsx(classes.matTooltipTrigger, classes.userImage)}>
-                <img className={classes.footerImage} src="https://lh6.googleusercontent.com/-ngHM-vHO4eU/AAAAAAAAAAI/AAAAAAAAABA/1FEIR1NDQQc/s96-c/photo.jpg" />
-              </div>
+              {event.registered_users.top_users.map(t => (
+                <div key={t.name} className={clsx(classes.matTooltipTrigger, classes.userImage)}>
+                  <img className={classes.footerImage} src={t.image_url} />
+                </div>
+              ))}
             </div>
-            <p className={classes.count}> and <b>890</b> others registered </p>
+            {event.registered_users.show_users_count && <p className={classes.count}> and <b> {event.registered_users.other_users_count} </b> others registered </p>}
           </div>
           <div className={classes.status}>
             <img src="https://files.codingninjas.in/0000000000001272.png" height="30px" alt="" />

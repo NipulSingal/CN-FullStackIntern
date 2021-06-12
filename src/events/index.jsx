@@ -2,15 +2,10 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 
-// import Tabs from '@material-ui/core/Tabs'
-// import Tab from '@material-ui/core/Tab'
-// import ListItem from '@material-ui/core/ListItem'
-// import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
-// import { NavLink } from 'react-router-dom'
 
-// import EventsWrapper from './events'
 import Footer from './footer'
+import EventBody from './events'
 // import { callApi } from '../utils/api'
 
 const useStyles = makeStyles(() => ({
@@ -90,6 +85,43 @@ const useStyles = makeStyles(() => ({
     textDecoration: 'none',
     color: '#fa7328'
   },
+  eventSubCategories: {
+    padding: '14px 24px',
+    background: '#fafafa',
+    marginBottom: '34px',
+    borderTop: '1px solid #e0e0e0',
+    borderBottom: '1px solid #e0e0e0'
+  },
+  subNav: {
+    fontSize: "16px", 
+    fontWeight: 700, 
+    paddingRight: "20px", 
+    marginRight: 0, 
+    display: "flex", 
+    alignItems: "center", 
+    textAlign: "center",
+    cursor: 'pointer'
+  },
+  subNavText: {
+    fontSize: '16px',
+    fontWeight: 700,
+    paddingRight: '20px',
+    marginRight: 0,
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: '#9e9e9e'
+  },
+  subNavSelectedText: {
+    fontSize: '16px',
+    fontWeight: 700,
+    paddingRight: '20px',
+    marginRight: 0,
+    display: 'flex',
+    alignItems: 'center',
+    textAlign: 'center',
+    color: '#fa7328'
+  },
   footer: {
     boxSizing: 'border-box',
     marginBottom: 0
@@ -98,7 +130,56 @@ const useStyles = makeStyles(() => ({
 export default function App () {
   const classes = useStyles()
   const [eventCategory, setEventCategory] = React.useState('ALL_EVENTS')
+  const [subEventCategory, setSubEventCategory] = React.useState('Upcoming')
+  const [tags, setTags] = React.useState([])
+  const [events, setEvents] = React.useState([])
 
+  const handleChange = (s) => {
+    setEventCategory(s)
+    setSubEventCategory('Upcoming')
+    fetchEvents()
+    fetchTags()
+  }
+  const handleSubChange = (s) => {
+    setSubEventCategory(s)
+    fetchEvents()
+    fetchTags()
+  }
+
+  const fetchTags = () => {
+    return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
+      .then((response) => response.json())
+      .then((e) => {
+        setTags(e.data && e.data.tags ? e.data.tags : [])
+      });
+  }
+  const fetchEvents = () => {
+    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
+      .then((response) => response.json())
+      .then((e) => {
+        setEvents(e.data && e.data.events ? e.data.events : [])
+      });
+  }
+
+  // const downloadData = () => {
+  //   callApi(`https://api.codingninjas.com/api/v3/event_tags`)
+  //     .then(e => {
+  //       if(e.success){
+  //         console.log(e.data.tags);
+  //         setTags(e.data && e.data.tags ? e.data.tags : [])
+  //       }
+  //     })
+  //   callApi(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
+  //     .then(e => {
+  //       if(e.success){
+  //         setEvents(e.data.events)
+  //       }
+  //     })
+  // }
+  React.useEffect(() => {
+    fetchTags()
+    fetchEvents()
+  }, [])
   const eventBar = [
     {
       name: 'All Events',
@@ -132,9 +213,17 @@ export default function App () {
     },
   ]
 
-  const handleChange = (s) => {
-    setEventCategory(s)
-  }
+  const subEventBar = [
+    {
+      name: 'Upcoming'
+    },
+    {
+      name: 'Archived'
+    },
+    {
+      name: 'All Time Favorites',
+    }
+  ]
 
   return (
     <div className={classes.app}>
@@ -146,27 +235,42 @@ export default function App () {
       <div className={classes.events}>
         <div className={classes.eventsWrapper}>
           <div className={clsx(classes.tabs, classes.eventCategories)}>
-            {/* <div> */}
-              {eventBar.map(s => {
-                return(
-                  <div key={s.name} onClick={() => handleChange(s.value)} className={classes.nav}>
-                    {s.value == eventCategory ? (
-                      <>
-                        <img className={classes.navIcon} src={s.selectIcon}/>
-                        <ListItemText primary={s.name} className={classes.navSelectedText} />
-                      </>
-                    ) : (
-                      <>
-                        <img className={classes.navIcon} src={s.Icon}/>
-                        <ListItemText primary={s.name} className={classes.navText} />
-                      </>
-                    )}
-                  </div>
-                )
-              })}
-            {/* </div> */}
+            {eventBar.map(s => {
+              return(
+                <div key={s.name} onClick={() => handleChange(s.value)} className={classes.nav}>
+                  {s.value == eventCategory ? (
+                    <>
+                      <img className={classes.navIcon} src={s.selectIcon}/>
+                      <ListItemText primary={s.name} className={classes.navSelectedText} />
+                    </>
+                  ) : (
+                    <>
+                      <img className={classes.navIcon} src={s.Icon}/>
+                      <ListItemText primary={s.name} className={classes.navText} />
+                    </>
+                  )}
+                </div>
+              )
+            })}
           </div>
-          {/* <EventsWrapper eventType={eventCategory}/> */}
+          <div className={clsx(classes.tabs, classes.eventSubCategories)}>
+            {subEventBar.map(s => {
+              return(
+                <div key={s.name} onClick={() => handleSubChange(s.name)} className={classes.subNav}>
+                  {s.name == subEventCategory ? (
+                    <>
+                      <ListItemText primary={s.name} className={classes.subNavSelectedText} />
+                    </>
+                  ) : (
+                    <>
+                      <ListItemText primary={s.name} className={classes.subNavText} />
+                    </>
+                  )}
+                </div>
+              )
+            })}
+          </div>
+          <EventBody events={events} tags={tags} eventCategory={eventCategory} subEventCategory={subEventCategory} />
         </div>
       </div>
 
