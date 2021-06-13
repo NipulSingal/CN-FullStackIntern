@@ -1,8 +1,10 @@
 import React from 'react'
+import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Grid from '@material-ui/core/Grid'
 import Hidden from '@material-ui/core/Hidden'
+// import TextField from '@material-ui/core/TextField';
 
 import Upcoming from './components/upcoming'
 import EmptyScreen from './components/EmptyScreen'
@@ -97,6 +99,49 @@ const useStyles = makeStyles(() => ({
     marginBottom: '10px',
     background: '#fff',
     textDecoration: 'none'
+  },
+  eventPagination: {
+    display: 'flex',
+    justifyContent: 'flex-end',
+    marginTop: '20px',
+    alignItems: 'center'
+  },
+  landingPageArrow: {
+    background: "#fc9d69", 
+    boxShadow: "0 2px 4px rgb(24 4 50 / 24%)", 
+    borderRadius: "4px", 
+    padding: "12px 18px", 
+    cursor: "pointer", 
+    MsUserSelect: "none", 
+    userSelect: "none", 
+    WebkitUserSelect: "none", 
+    MozUserSelect: "none", 
+    WebkitTapHighlightColor: "transparent", 
+    WebkitUserDrag: "none"
+  },
+  landingPageInput: {
+    margin: "0 14px", 
+    color: "#616161", 
+    fontSize: "16px", 
+    fontWeight: 600
+  },
+  pageInput: {
+    border: "1px solid #d0d0d0", 
+    color: "#616161", 
+    fontSize: "16px", 
+    boxSizing: "border-box", 
+    borderRadius: "4px", 
+    padding: "8px", 
+    textAlign: "center", 
+    width: "50px", 
+    background: "#fff", 
+    margin: "0 6px"
+  },
+  pageDis: {
+    cursor: 'not-allowed',
+    pointerEvents: 'none',
+    boxSizing: 'border-box',
+    opacity: .5
   }
 }))
 export default function Events (props) {
@@ -105,11 +150,14 @@ export default function Events (props) {
   const {tagsSelected, setTagsSelected} = props
 
   const [showAll, setShowAll] = React.useState(false);
+  const {page, setPage} = props
   const visibleOptions = showAll ? tags.length : SHOW_BY_DEFAULT; 
 
   const toggleShowAll = () => { 
     setShowAll(!showAll)
   }
+
+  console.log(props.pageCount)
   
   const handleClick = (tag) => {
     let a = tagsSelected
@@ -119,6 +167,21 @@ export default function Events (props) {
     }else a.push(tag)
     setTagsSelected(a)
     props.fetchEvents()
+  }
+
+  // const handlePageChange = (e) => {
+  //   setPage(e.target.value)
+  //   props.fetchEvents()
+  // }
+  const handlePageRightChange = () => {
+    let a = page + 1
+    setPage(a)
+    // props.fetchEvents()
+  }
+  const handlePageLeftChange = () => {
+    let a = page - 1
+    setPage(a)
+    // props.fetchEvents()
   }
 
   return (
@@ -168,6 +231,19 @@ export default function Events (props) {
                   )
                 })}
               </Grid>
+              {events.length > 0 && <div className={classes.eventPagination}>
+                {page > 1 && page <= props.pageCount ? <>
+                  <div onClick={handlePageLeftChange} className={classes.landingPageArrow}><img className={classes.pageArrowImg} src="https://files.codingninjas.in/left-arrow-5581.svg" alt="Prev" /></div>
+                </> : <>
+                  <div className={clsx(classes.landingPageArrow, classes.pageDis)}><img className={classes.pageArrowImg} src="https://files.codingninjas.in/left-arrow-5581.svg" alt="Prev" /></div>
+                </>}
+                <div className={classes.landingPageInput}> Page <input min="1" max={props.pageCount} value={page} className={classes.pageInput} /> of {props.pageCount} </div>
+                {page > 0 && page < props.pageCount ? <>
+                  <div onClick={handlePageRightChange} className={classes.landingPageArrow}><img className={classes.pageArrowImg} src="https://files.codingninjas.in/right-arrow-5582.svg" alt="Next" /></div>
+                </> : <>
+                  <div className={clsx(classes.landingPageArrow, classes.pageDis)}><img className={classes.pageArrowImg} src="https://files.codingninjas.in/right-arrow-5582.svg" alt="Next" /></div>
+                </>}
+              </div>}
             </Grid>
             <Hidden only={['xs', 'sm']}>
             <Grid item xs={2}>

@@ -142,12 +142,11 @@ export default function App () {
   const classes = useStyles()
   const [eventCategory, setEventCategory] = React.useState('ALL_EVENTS')
   const [subEventCategory, setSubEventCategory] = React.useState('Upcoming')
-  const [offset] = React.useState(0)
   const [tags, setTags] = React.useState([])
   const [events, setEvents] = React.useState([])
   const [tagsSelected, setTagsSelected] = React.useState([])
-  const [totalEvents, setTotalEvents] = React.useState(0)
-  console.log(totalEvents)
+  const [pageCount, setPageCount] = React.useState(0)
+  const [page, setPage] = React.useState(1)
 
   const fetchTags = () => {
     return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
@@ -157,11 +156,11 @@ export default function App () {
       });
   }
   const fetchEvents = () => {
-    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=${tagsSelected}&offset=${offset}`)
+    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=${tagsSelected}&offset=${(page-1) * 20}`)
       .then((response) => response.json())
       .then((e) => {
         setEvents(e.data && e.data.events ? e.data.events : [])
-        setTotalEvents(e.data && e.data.events ? (e.data.events.length * e.data.page_count) : 0)
+        setPageCount(e.data ? e.data.page_count : 0)
       });
   }
 
@@ -170,7 +169,7 @@ export default function App () {
   }, [])
   React.useEffect(() => {
     fetchEvents()
-  }, [eventCategory, subEventCategory])
+  }, [eventCategory, subEventCategory, page])
 
   const handleChange = (s) => {
     setEventCategory(s)
@@ -279,7 +278,7 @@ export default function App () {
               )
             })}
           </div>
-          <EventBody events={events} tags={tags} eventCategory={eventCategory} subEventCategory={subEventCategory} tagsSelected={tagsSelected} setTagsSelected={setTagsSelected} fetchEvents={fetchEvents} />
+          <EventBody events={events} tags={tags} tagsSelected={tagsSelected} setTagsSelected={setTagsSelected} fetchEvents={fetchEvents} pageCount={pageCount} page={page} setPage={setPage} />
         </div>
       </div>
 
