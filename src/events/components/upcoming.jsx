@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     opacity: '.2'
   },
   headerImg: {
-    objectFit: 'cover',
+    // objectFit: 'cover',
     width: '100%',
     height: '100%',
     borderTopLeftRadius: '5px',
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
     fontSize: "12px", 
     color: "#121212", 
     background: "#fff", 
-    padding: "7px 13px", 
+    padding: "0px 13px", 
     borderRadius: "2px", 
     bottom: "7px", 
     right: "7px", 
@@ -166,6 +166,21 @@ const useStyles = makeStyles(() => ({
   },
   status: {
     display: 'flex'
+  },
+  regButton: {
+    display: "flex", 
+    backgroundImage: "linear-gradient(#6de7b4,#3bc97d)", 
+    fontSize: "12px", 
+    color: "#fff", 
+    padding: "8px 14px", 
+    borderTopLeftRadius: "16px", 
+    borderBottomLeftRadius: "16px", 
+    height: "fit-content"
+  },
+  regImage: {
+    width: '12px',
+    height: '13px',
+    marginRight: '8px'
   }
 }))
 
@@ -217,7 +232,7 @@ export default function upcoming(props) {
         <footer className={classes.footer}>
           <div className={classes.registeredUsers}>
             <div className={classes.profileImgContainer}>
-              {event.registered_users.top_users.map(t => (
+              {event.registered_users.top_users.filter(t => t.image_url != null).map(t => (
                 <div key={t.name} className={clsx(classes.matTooltipTrigger, classes.userImage)}>
                   <img className={classes.footerImage} src={t.image_url} />
                 </div>
@@ -225,8 +240,14 @@ export default function upcoming(props) {
             </div>
             {event.registered_users.show_users_count && <p className={classes.count}> and <b> {event.registered_users.other_users_count} </b> others registered </p>}
           </div>
-          {event.event_sub_category != 'Archived' ? <div className={classes.status}>
+          {event.event_sub_category != 'Archived' && !event.user_already_registered ? <div className={classes.status}>
             <img src="https://files.codingninjas.in/0000000000001272.png" height="30px" alt="" />
+          </div> : <></>}
+          {event.event_sub_category != 'Archived' && event.user_already_registered ? <div className={classes.status}>
+            <div className={classes.regButton}>
+              <img className={classes.regImage} src="https://files.codingninjas.in/0000000000001261.png" />
+              Registered
+            </div>
           </div> : <></>}
         </footer>
       </div>

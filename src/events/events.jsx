@@ -1,11 +1,13 @@
 import React from 'react'
-// import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 
 import Grid from '@material-ui/core/Grid'
+import Hidden from '@material-ui/core/Hidden'
 
 import Upcoming from './components/upcoming'
-// import Archived from './components/archived'
+import EmptyScreen from './components/EmptyScreen'
+
+const SHOW_BY_DEFAULT = 12; 
 
 const useStyles = makeStyles(() => ({
   app: {
@@ -44,66 +46,161 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     textDecoration: 'none'
   },
+  tagSelected: {
+    color: '#fff',
+    fontSize: '14px',
+    padding: '6px 12px',
+    fontWeight: 400,
+    borderRadius: '2px',
+    marginRight: '5px',
+    marginBottom: '10px',
+    background: '#fa7328',
+    cursor: 'pointer',
+    textDecoration: 'none'
+  },
+  tagMob: {
+    color: '#424242',
+    fontSize: '14px',
+    padding: '6px 12px',
+    fontWeight: 400,
+    borderRadius: '20px',
+    marginRight: '5px',
+    marginBottom: '10px',
+    background: '#eee',
+    cursor: 'pointer',
+    textDecoration: 'none'
+  },
+  tagMobSelected: {
+    color: '#fff',
+    fontSize: '14px',
+    padding: '6px 12px',
+    fontWeight: 400,
+    borderRadius: '20px',
+    marginRight: '5px',
+    marginBottom: '10px',
+    background: '#fa7328',
+    cursor: 'pointer',
+    textDecoration: 'none'
+  },
   tagText: {
     margin: '0 !important'
+  },
+  viewMore: {
+    color: '#fa7328',
+    fontWeight: 600,
+    fontSize: '14px',
+    cursor: 'pointer',
+    display: 'block',
+    padding: '6px 12px',
+    borderRadius: '20px',
+    marginRight: '5px',
+    marginBottom: '10px',
+    background: '#fff',
+    textDecoration: 'none'
   }
 }))
 export default function Events (props) {
   const classes = useStyles()
-  const [events, setEvents] = React.useState([])
-  const {eventCategory, subEventCategory} = props
-  const [tags, setTags] = React.useState([])
-  // const {events, tags} = props
-  // console.log(events)
-  // console.log(tags)
+  const {events, tags} = props
+  const {tagsSelected, setTagsSelected} = props
 
-  const fetchEvents = () => {
-    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
-      .then((response) => response.json())
-      .then((e) => {
-        setEvents(e.data && e.data.events ? e.data.events : [])
-      });
+  const [showAll, setShowAll] = React.useState(false);
+  const visibleOptions = showAll ? tags.length : SHOW_BY_DEFAULT; 
+
+  const toggleShowAll = () => { 
+    setShowAll(!showAll)
   }
-  const fetchTags = () => {
-    return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
-      .then((response) => response.json())
-      .then((e) => {
-        setTags(e.data && e.data.tags ? e.data.tags : [])
-      });
+  
+  const handleClick = (tag) => {
+    let a = tagsSelected
+    const index = a.indexOf(tag)
+    if(index > -1){
+      a.splice(index, 1)
+    }else a.push(tag)
+    setTagsSelected(a)
+    props.fetchEvents()
   }
-  React.useEffect(() => {
-    fetchEvents()
-    fetchTags()
-  }, [])
 
   return (
     <div className={classes.app}>
       <div className={classes.eventBody}>
         <div className={classes.eventCardsContainer}>
           <Grid container className={classes.eventsContainer}>
+            <Hidden only={['md', 'lg', 'xl']}>
+              <Grid item sm={12}>
+                <div className={classes.tagsContainer}>
+                  <div className={classes.tagsHeading}>Tags</div>
+                  <div className={classes.tagsWrapper}>
+                    {tags.slice(0, visibleOptions).map(tag => {
+                        let a = tagsSelected
+                        const index = a.indexOf(tag)
+                        if(index > -1){
+                          return(
+                            <div onClick={() => handleClick(tag)} key={tag} className={classes.tagMobSelected}>
+                              <p className={classes.tagText}> {tag} </p>
+                            </div>
+                          )
+                        }
+                        else{
+                          return(
+                            <div onClick={() => handleClick(tag)} key={tag} className={classes.tagMob}>
+                              <p className={classes.tagText}> {tag} </p>
+                            </div>
+                          )
+                        }
+                    })}
+                    { tags.length > SHOW_BY_DEFAULT && (
+                      <div className={classes.viewMore} onClick={toggleShowAll}>
+                        {!showAll ? `See ${tags.length - SHOW_BY_DEFAULT} more tags` : ''}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Grid>
+            </Hidden>
             <Grid item md={10}>
               <Grid container>
-                {events.map(e => {
+                {events.length == 0 ? <EmptyScreen /> : events.map(e => {
                   return(
-                    <Grid key={e} item xs={12} md={6}>
-                      <Upcoming key={e} event={e} />
+                    <Grid key={e.id} item xs={12} md={6}>
+                      <Upcoming key={e.id} event={e} />
                     </Grid>
                   )
                 })}
               </Grid>
             </Grid>
-            <Grid item md={2}>
+            <Hidden only={['xs', 'sm']}>
+            <Grid item xs={2}>
               <div className={classes.tagsContainer}>
                 <div className={classes.tagsHeading}>Tags</div>
                 <div className={classes.tagsWrapper}>
-                  {tags.map(tag => (
-                    <div key={tag} className={classes.tag}>
-                      <p className={classes.tagText}> {tag} </p>
+                  {tags.slice(0, visibleOptions).map(tag => {
+                      let a = tagsSelected
+                      const index = a.indexOf(tag)
+                      if(index > -1){
+                        return(
+                          <div onClick={() => handleClick(tag)} key={tag} className={classes.tagSelected}>
+                            <p className={classes.tagText}> {tag} </p>
+                          </div>
+                        )
+                      }
+                      else{
+                        return(
+                          <div onClick={() => handleClick(tag)} key={tag} className={classes.tag}>
+                            <p className={classes.tagText}> {tag} </p>
+                          </div>
+                        )
+                      }
+                  })}
+                  { tags.length > SHOW_BY_DEFAULT && (
+                    <div className={classes.viewMore} onClick={toggleShowAll}>
+                      {!showAll ? `See ${tags.length - SHOW_BY_DEFAULT} more tags` : ''}
                     </div>
-                  ))}
+                  )}
                 </div>
               </div>
             </Grid>
+            </Hidden>
             
           </Grid>
         </div>

@@ -9,8 +9,18 @@ import EventBody from './events'
 // import { callApi } from '../utils/api'
 
 const useStyles = makeStyles(() => ({
+  root: {
+    display: 'flex',
+    width: '100%',
+    backgroundColor: '#ececec',
+    justifyContent: 'center'
+  },
   app: {
-    fontFamily: 'Mulish,Helvetica,Arial,sans-serif'
+    fontFamily: 'Mulish,Helvetica,Arial,sans-serif',
+    maxWidth: '1600px',
+    width: '100%',
+    overflow: 'hidden',
+    backgroundColor: '#fff'
   },
   header: {
     height: '245px',
@@ -127,46 +137,57 @@ const useStyles = makeStyles(() => ({
     marginBottom: 0
   }
 }))
+
 export default function App () {
   const classes = useStyles()
   const [eventCategory, setEventCategory] = React.useState('ALL_EVENTS')
   const [subEventCategory, setSubEventCategory] = React.useState('Upcoming')
-  // const [tags, setTags] = React.useState([])
-  // const [events, setEvents] = React.useState([])
+  const [offset] = React.useState(0)
+  const [tags, setTags] = React.useState([])
+  const [events, setEvents] = React.useState([])
+  const [tagsSelected, setTagsSelected] = React.useState([])
+  const [totalEvents, setTotalEvents] = React.useState(0)
+  console.log(totalEvents)
+
+  const fetchTags = () => {
+    return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
+      .then((response) => response.json())
+      .then((e) => {
+        setTags(e.data && e.data.tags ? e.data.tags : [])
+      });
+  }
+  const fetchEvents = () => {
+    return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=${tagsSelected}&offset=${offset}`)
+      .then((response) => response.json())
+      .then((e) => {
+        setEvents(e.data && e.data.events ? e.data.events : [])
+        setTotalEvents(e.data && e.data.events ? (e.data.events.length * e.data.page_count) : 0)
+      });
+  }
+
+  React.useEffect(() => {
+    fetchTags()
+  }, [])
+  React.useEffect(() => {
+    fetchEvents()
+  }, [eventCategory, subEventCategory])
 
   const handleChange = (s) => {
     setEventCategory(s)
     setSubEventCategory('Upcoming')
+    setTagsSelected([])
     // fetchEvents()
-    // fetchTags()
   }
   const handleSubChange = (s) => {
     setSubEventCategory(s)
+    setTagsSelected([])
     // fetchEvents()
-    // fetchTags()
   }
-  // console.log(events)
-  // console.log(tags)
-
-  // const fetchTags = () => {
-  //   return fetch(`https://api.codingninjas.com/api/v3/event_tags`)
-  //     .then((response) => response.json())
-  //     .then((e) => {
-  //       setTags(e.data && e.data.tags ? e.data.tags : [])
-  //     });
-  // }
-  // const fetchEvents = () => {
-  //   return fetch(`https://api.codingninjas.com/api/v3/events?event_category=${eventCategory}&event_sub_category=${subEventCategory}&tag_list=Career Guidance,Coding Concepts,Competitive Programming,Futuristic Tech&offset=0`)
-  //     .then((response) => response.json())
-  //     .then((e) => {
-  //       setEvents(e.data && e.data.events ? e.data.events : [])
-  //     });
+  // const handleChangePage = (event, newPage) => {
+  //   let newOffset = off
+  //   setOffset()
   // }
 
-  // React.useEffect(() => {
-  //   fetchTags()
-  //   fetchEvents()
-  // }, [])
   const eventBar = [
     {
       name: 'All Events',
@@ -213,6 +234,7 @@ export default function App () {
   ]
 
   return (
+    <div className={classes.root}>
     <div className={classes.app}>
       <div className={classes.header}>
         <div className={classes.textHeader}>Events & News</div>
@@ -257,13 +279,14 @@ export default function App () {
               )
             })}
           </div>
-          <EventBody eventCategory={eventCategory} subEventCategory={subEventCategory} />
+          <EventBody events={events} tags={tags} eventCategory={eventCategory} subEventCategory={subEventCategory} tagsSelected={tagsSelected} setTagsSelected={setTagsSelected} fetchEvents={fetchEvents} />
         </div>
       </div>
 
       <div className={classes.footer}>
         <Footer/>      
       </div>
+    </div>
     </div>
   )
 }
