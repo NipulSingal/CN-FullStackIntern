@@ -43,7 +43,10 @@ const useStyles = makeStyles(() => ({
     fontWeight: 600
   },
   events: {
-    padding: '70px 130px'
+    padding: '70px 130px',
+    "@media (max-width: 720px)": {
+      padding: '70px 20px',
+    }
   },
   eventsWrapper: {
     fontWeight: 400,

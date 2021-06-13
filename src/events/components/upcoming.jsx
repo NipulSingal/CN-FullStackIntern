@@ -48,7 +48,10 @@ const useStyles = makeStyles(() => ({
     width: '100%',
     height: '100%',
     borderTopLeftRadius: '5px',
-    borderTopRightRadius: '5px'
+    borderTopRightRadius: '5px',
+    "@media (max-width: 720px)": {
+      paddingRight: '10px',
+    }
   },
   eventStatus: {
     position: "absolute", 
