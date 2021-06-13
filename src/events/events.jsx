@@ -156,8 +156,6 @@ export default function Events (props) {
   const toggleShowAll = () => { 
     setShowAll(!showAll)
   }
-
-  console.log(props.pageCount)
   
   const handleClick = (tag) => {
     let a = tagsSelected
@@ -169,19 +167,13 @@ export default function Events (props) {
     props.fetchEvents()
   }
 
-  // const handlePageChange = (e) => {
-  //   setPage(e.target.value)
-  //   props.fetchEvents()
-  // }
   const handlePageRightChange = () => {
     let a = page + 1
     setPage(a)
-    // props.fetchEvents()
   }
   const handlePageLeftChange = () => {
     let a = page - 1
     setPage(a)
-    // props.fetchEvents()
   }
 
   return (
