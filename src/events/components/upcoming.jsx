@@ -44,7 +44,7 @@ const useStyles = makeStyles(() => ({
     opacity: '.2'
   },
   headerImg: {
-    // objectFit: 'cover',
+    objectFit: 'cover',
     width: '100%',
     height: '100%',
     borderTopLeftRadius: '5px',
@@ -193,7 +193,7 @@ export default function upcoming(props) {
       <div className={classes.card}>
         <header className={classes.header}>
           <div className={classes.glass}>
-            <div className={classes.coverImageContainer} >
+            <div className={classes.coverImageContainer}>
               <div className={classes.glassMain}></div>
               <img className={classes.headerImg} src={event.cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
             </div>
@@ -232,9 +232,9 @@ export default function upcoming(props) {
         <footer className={classes.footer}>
           <div className={classes.registeredUsers}>
             <div className={classes.profileImgContainer}>
-              {event.registered_users.top_users.filter(t => t.image_url != null).map(t => (
+              {event.registered_users.top_users.map(t => (
                 <div key={t.name} className={clsx(classes.matTooltipTrigger, classes.userImage)}>
-                  <img className={classes.footerImage} src={t.image_url} />
+                  <img className={classes.footerImage} src={t.image_url ? t.image_url : "https://files.codingninjas.in/0000000000001270.png"} />
                 </div>
               ))}
             </div>
