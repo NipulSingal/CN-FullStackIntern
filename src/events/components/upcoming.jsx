@@ -59,7 +59,7 @@ const useStyles = makeStyles(() => ({
     fontSize: "12px", 
     color: "#121212", 
     background: "#fff", 
-    padding: "0px 13px", 
+    padding: "0 13px",
     borderRadius: "2px", 
     bottom: "7px", 
     right: "7px", 
@@ -78,7 +78,28 @@ const useStyles = makeStyles(() => ({
     background: "red linear-gradient(#ff73ac,#ff274b)", 
     transition: "height .25s ease,width .25s ease", 
     transform: "translate(-50%,-50%)", 
-    marginRight: "2px"
+    marginRight: "2px",
+    '&::after': {
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      animation: '$ripple 1.2s infinite ease-in-out',
+      border: '1px solid red',
+      content: '""',
+    },
+  },
+  '@keyframes ripple': {
+    '0%': {
+      transform: 'scale(.8)',
+      opacity: 1,
+    },
+    '100%': {
+      transform: 'scale(1.4)',
+      opacity: 0,
+    },
   },
   main: {
     padding: '20px 16px'
@@ -98,17 +119,19 @@ const useStyles = makeStyles(() => ({
   eventInfoItem: {
     display: "flex", 
     flexDirection: "column", 
-    marginRight: "16px"
+    marginRight: "16px",
+    fontWeight: 500
   },
   itemLabel: {
     fontSize: "13px", 
     color: "rgba(28,28,28,.6)", 
-    margin: "0"
+    margin: 0,
+    marginBottom: -10
   },
   itemValue: {
     fontSize: "14px", 
     color: "#212121", 
-    fontWeight: 600
+    fontWeight: 500
   },
   shortDescription: {
     marginTop: "12px", 
@@ -185,7 +208,14 @@ const useStyles = makeStyles(() => ({
     width: '12px',
     height: '13px',
     marginRight: '8px'
-  }
+  },
+  viewMore: {
+    color: '#fa7328',
+    fontWeight: 550,
+    fontSize: '14px',
+    cursor: 'pointer',
+    marginBottom: '7px'
+  },
 }))
 
 export default function upcoming(props) {
@@ -240,9 +270,14 @@ export default function upcoming(props) {
           </div>
           <div className={classes.shortDescription}> {event.short_desc} </div>
           <div className={classes.tagsContainer}>
-            {event.card_tags.map(c => (
+            {event.card_tags.slice(0, 3).map(c => (
               <div key={c} className={classes.tag}> {c} </div>
             ))}
+            {event.card_tags.length > 3 && (
+              <div className={classes.viewMore}>
+                {`+${event.card_tags.length - 3} more`}
+              </div>
+            )}
           </div>
         </main>
         
@@ -257,7 +292,7 @@ export default function upcoming(props) {
             </div>
             {event.registered_users.show_users_count && <p className={classes.count}> and <b> {event.registered_users.other_users_count} </b> others registered </p>}
           </div>
-          {event.event_sub_category != 'Archived' && !event.user_already_registered ? <div className={classes.status}>
+          {event.event_sub_category != 'Archived' && event.registration_status == 'REGISTRATIONS_OPEN' && !event.user_already_registered ? <div className={classes.status}>
             <img src="https://files.codingninjas.in/0000000000001272.png" height="30px" alt="" />
           </div> : <></>}
           {event.event_sub_category != 'Archived' && event.user_already_registered ? <div className={classes.status}>

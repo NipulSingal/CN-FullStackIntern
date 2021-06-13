@@ -95,7 +95,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     color: '#9e9e9e',
-    textDecoration: 'none'
+    textDecoration: 'none',
+    fontWeight: 400
   },
   navSelectedText: {
     fontSize: '19px',
@@ -103,7 +104,8 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     alignItems: 'center',
     textDecoration: 'none',
-    color: '#fa7328'
+    color: '#fa7328',
+    fontWeight: 700
   },
   eventSubCategories: {
     padding: '14px 24px',
@@ -124,7 +126,7 @@ const useStyles = makeStyles(() => ({
   },
   subNavText: {
     fontSize: '16px',
-    fontWeight: 700,
+    fontWeight: 400,
     paddingRight: '20px',
     marginRight: 0,
     display: 'flex',

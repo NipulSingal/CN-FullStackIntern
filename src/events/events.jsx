@@ -89,7 +89,7 @@ const useStyles = makeStyles(() => ({
   },
   viewMore: {
     color: '#fa7328',
-    fontWeight: 600,
+    fontWeight: 550,
     fontSize: '14px',
     cursor: 'pointer',
     display: 'block',
