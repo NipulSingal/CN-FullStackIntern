@@ -175,11 +175,13 @@ export default function App () {
     setEventCategory(s)
     setSubEventCategory('Upcoming')
     setTagsSelected([])
+    setPage(1)
     // fetchEvents()
   }
   const handleSubChange = (s) => {
     setSubEventCategory(s)
     setTagsSelected([])
+    setPage(1)
     // fetchEvents()
   }
   // const handleChangePage = (event, newPage) => {
