@@ -1,5 +1,9 @@
 import React from 'react'
 import clsx from 'clsx'
+import date from 'date-and-time';
+
+import Hidden from '@material-ui/core/Hidden'
+
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(() => ({
@@ -49,9 +53,6 @@ const useStyles = makeStyles(() => ({
     height: '100%',
     borderTopLeftRadius: '5px',
     borderTopRightRadius: '5px',
-    "@media (max-width: 720px)": {
-      paddingRight: '10px',
-    }
   },
   eventStatus: {
     position: "absolute", 
@@ -107,7 +108,7 @@ const useStyles = makeStyles(() => ({
   itemValue: {
     fontSize: "14px", 
     color: "#212121", 
-    fontWeight: 700
+    fontWeight: 600
   },
   shortDescription: {
     marginTop: "12px", 
@@ -191,6 +192,10 @@ export default function upcoming(props) {
   const classes = useStyles()
   const event = props.event
 
+  // var endDate = new Date(event.registration_end_time * 1000)
+  // date.format(endDate, 'DD MMM, hh:mm A')
+  // console.log(date.format(endDate, 'DD MMM, hh:mm A'))
+
   return (
     <div className={classes.event}>
       <div className={classes.card}>
@@ -198,13 +203,22 @@ export default function upcoming(props) {
           <div className={classes.glass}>
             <div className={classes.coverImageContainer}>
               <div className={classes.glassMain}></div>
-              <img className={classes.headerImg} src={event.cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
+              <Hidden only={['md', 'lg', 'xl']}>
+                <img className={classes.headerImg} src={event.mobile_cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
+              </Hidden>
+              <Hidden only={['xs', 'sm']}>
+                <img className={classes.headerImg} src={event.cover_picture} alt="Coding Ninjas Admission &amp; Scholarship Test June'21" />
+              </Hidden>
             </div>
           </div>
           {event.event_sub_category != 'Archived' ? <div className={classes.eventStatus}>
             <div className={classes.eventStatusContainer}>
-              <div className={classes.circle}></div>
-              <p> Registrations <b>open</b> till <b> {event.registration_end_time} </b></p>
+              {event.registration_status == 'REGISTRATIONS_OPEN' && <div className={classes.circle}></div>}
+              {event.registration_status == 'REGISTRATIONS_CLOSED' ? <p>
+                Registrations <b>closed</b>
+              </p> : <p>
+                Registrations <b>open</b> till <b> {date.format(new Date(event.registration_end_time * 1000), 'DD MMM, hh:mm A')} </b>
+              </p>}
             </div>
           </div> : <></>}
         </header>
@@ -213,11 +227,11 @@ export default function upcoming(props) {
           <div className={classes.details}>
             <div className={classes.eventInfoItem}>
               <p className={classes.itemLabel}><b>Starts on</b></p>
-              <p className={classes.itemValue}> {event.event_start_time} </p>
+              <p className={classes.itemValue}> {date.format(new Date(event.event_start_time * 1000), 'hh:mm A, DD MMM YYYY')} </p>
             </div>
             <div className={clsx(classes.eventInfoItem, classes.price)}>
               <p className={classes.itemLabel}><b>Entry Fee</b></p>
-              <p className={classes.itemValue}> {event.fees || 'Free'} </p>
+              <p className={classes.itemValue}> {event.fees ? `${event.currency} ${event.fees}` : 'Free'} </p>
             </div>
             <div className={classes.eventInfoItem}>
               <p className={classes.itemLabel}><b>Venue</b></p>

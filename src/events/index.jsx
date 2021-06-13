@@ -2,8 +2,6 @@ import React from 'react'
 import clsx from 'clsx'
 import { makeStyles } from '@material-ui/core/styles'
 
-import ListItemText from '@material-ui/core/ListItemText'
-
 import Footer from './footer'
 import EventBody from './events'
 // import { callApi } from '../utils/api'
@@ -27,13 +25,20 @@ const useStyles = makeStyles(() => ({
     paddingTop: '73px',
     paddingLeft: '65px',
     boxSizing: 'border-box',
-    backgroundImage: `url("https://files.codingninjas.in/0000000000002471.png")`
+    backgroundImage: `url("https://files.codingninjas.in/0000000000002471.png")`,
+    "@media (max-width: 720px)": {
+      paddingLeft: '45px',
+      paddingBottom: '28px'
+    }
   },
   textHeader: {
     margin: 0,
     fontSize: '60px',
     color: '#fff',
-    fontWeight: 700
+    fontWeight: 700,
+    "@media (max-width: 720px)": {
+      fontSize: '44px'
+    }
   },
   subHeader: {
     color: '#fff',
@@ -58,7 +63,9 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     overflowX: 'auto',
     overflowY: 'hidden',
-    overflow: 'scroll',
+    "@media (max-width: 720px)": {
+      overflow: 'scroll'
+    }
   },
   eventCategories: {
     padding: '20px 18px'
@@ -250,19 +257,19 @@ export default function App () {
           <div className={clsx(classes.tabs, classes.eventCategories)}>
             {eventBar.map(s => {
               return(
-                <div key={s.name} onClick={() => handleChange(s.value)} className={classes.nav}>
+                <a key={s.name} onClick={() => handleChange(s.value)} className={classes.nav}>
                   {s.value == eventCategory ? (
                     <>
                       <img className={classes.navIcon} src={s.selectIcon}/>
-                      <ListItemText primary={s.name} className={classes.navSelectedText} />
+                      <div className={classes.navSelectedText}>{s.name}</div>
                     </>
                   ) : (
                     <>
                       <img className={classes.navIcon} src={s.Icon}/>
-                      <ListItemText primary={s.name} className={classes.navText} />
+                      <div className={classes.navText}>{s.name}</div>
                     </>
                   )}
-                </div>
+                </a>
               )
             })}
           </div>
@@ -272,11 +279,11 @@ export default function App () {
                 <div key={s.name} onClick={() => handleSubChange(s.name)} className={classes.subNav}>
                   {s.name == subEventCategory ? (
                     <>
-                      <ListItemText primary={s.name} className={classes.subNavSelectedText} />
+                      <div className={classes.subNavSelectedText}>{s.name}</div>
                     </>
                   ) : (
                     <>
-                      <ListItemText primary={s.name} className={classes.subNavText} />
+                      <div className={classes.subNavText}>{s.name}</div>
                     </>
                   )}
                 </div>
