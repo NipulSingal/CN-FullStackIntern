@@ -164,6 +164,7 @@ export default function Events (props) {
       a.splice(index, 1)
     }else a.push(tag)
     setTagsSelected(a)
+    setPage(1)
     props.fetchEvents()
   }
 
