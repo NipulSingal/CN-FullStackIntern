@@ -241,7 +241,7 @@ export default function upcoming(props) {
               </Hidden>
             </div>
           </div>
-          {event.event_sub_category != 'Archived' ? <div className={classes.eventStatus}>
+          {event.registration_status != 'PAST' ? <div className={classes.eventStatus}>
             <div className={classes.eventStatusContainer}>
               {event.registration_status == 'REGISTRATIONS_OPEN' && <div className={classes.circle}></div>}
               {event.registration_status == 'REGISTRATIONS_CLOSED' ? <p>
