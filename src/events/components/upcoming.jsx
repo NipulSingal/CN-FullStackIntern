@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
   circle: {
     borderRadius: "50%", 
     position: "relative", 
-    width: "10px!important", 
+    width: "10px", 
     height: "10px", 
     top: "5px", 
     background: "red linear-gradient(#ff73ac,#ff274b)", 
@@ -80,9 +80,9 @@ const useStyles = makeStyles(() => ({
     transform: "translate(-50%,-50%)", 
     marginRight: "2px",
     '&::after': {
-      position: 'absolute',
-      top: 0,
-      left: 0,
+      position: 'fixed',
+      top: -1,
+      left: -1,
       width: '100%',
       height: '100%',
       borderRadius: '50%',
@@ -131,7 +131,7 @@ const useStyles = makeStyles(() => ({
   itemValue: {
     fontSize: "14px", 
     color: "#212121", 
-    fontWeight: 500
+    fontWeight: 600
   },
   shortDescription: {
     marginTop: "12px", 
